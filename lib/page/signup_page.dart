@@ -1,11 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 
 class SignUpPage extends StatelessWidget {
-  final _dio = Dio();
-  final _storage = GetStorage();
-  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+  final void Function(
+          BuildContext context, String name, String email, String password)
+      registerFunction;
+
+  SignUpPage({required this.registerFunction, Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
@@ -99,12 +99,12 @@ class SignUpPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      goRegis(
+                      registerFunction(
+                        context,
                         _nameController.text,
                         _emailController.text,
                         _passwordController.text,
                       );
-                      Navigator.pushReplacementNamed(context, '/login');
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -158,22 +158,5 @@ class SignUpPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void goRegis(String name, String email, String password) async {
-    try {
-      final _response = await _dio.post(
-        '$_apiUrl/register',
-        data: {
-          'name': name,
-          'email': email,
-          'password': password,
-        },
-      );
-      print(_response.data);
-      _storage.write('token', _response.data['data']['token']);
-    } on DioError catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
   }
 }

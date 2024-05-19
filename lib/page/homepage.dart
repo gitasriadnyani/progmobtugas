@@ -1,26 +1,25 @@
 import 'package:cobaapi/page/profile_page.dart';
 import 'package:cobaapi/page/userlist.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:dio/dio.dart';
 
 class UserDataPage extends StatelessWidget {
-  final Dio _dio = Dio();
-  final GetStorage _storage = GetStorage();
-  final String _apiUrl = 'https://mobileapis.manpits.xyz/api';
+  final Function(BuildContext) getUserFunction;
+  final Function(BuildContext) logoutFunction;
+
+  UserDataPage({required this.getUserFunction, required this.logoutFunction});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Simpan Pinjam', style: TextStyle(fontFamily: 'Poppins')),
+        title: const Text('Simpan Pinjam',
+            style: TextStyle(fontFamily: 'Poppins')),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()));
+              Navigator.pushReplacementNamed(context, '/profile');
             },
           ),
         ],
@@ -32,16 +31,15 @@ class UserDataPage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UsersList()),
-                );
+                Navigator.pushReplacementNamed(context, '/user_list');
               },
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.pink[100]!),
+                  minimumSize: MaterialStateProperty.all(const Size(0, 50))),
               child: const Text(
                 'Get Anggota',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                ),
+                style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
               ),
             ),
           ],
@@ -68,35 +66,9 @@ class UserDataPage extends StatelessWidget {
         unselectedLabelStyle: TextStyle(fontFamily: 'Poppins'),
         onTap: (int index) async {
           if (index == 1) {
-            try {
-              final _response = await _dio.get(
-                '$_apiUrl/user',
-                options: Options(
-                  headers: {
-                    'Authorization': 'Bearer ${_storage.read('token')}'
-                  },
-                ),
-              );
-              print(_response.data);
-            } on DioError catch (e) {
-              print('${e.response} - ${e.response?.statusCode}');
-            }
+            getUserFunction(context);
           } else if (index == 2) {
-            try {
-              final _response = await _dio.get(
-                '$_apiUrl/logout',
-                options: Options(
-                  headers: {
-                    'Authorization': 'Bearer ${_storage.read('token')}'
-                  },
-                ),
-              );
-              print(_response.data);
-              _storage.remove('token');
-              Navigator.pushReplacementNamed(context, '/login');
-            } on DioError catch (e) {
-              print('${e.response} - ${e.response?.statusCode}');
-            }
+            logoutFunction(context);
           }
         },
       ),

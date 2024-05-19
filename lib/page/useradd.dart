@@ -33,22 +33,6 @@ class _AddUserState extends State<AddUser> {
     super.dispose();
   }
 
-  Future<void> _selectDate() async {
-    DateTime? _picked = await showDatePicker(
-      context: context,
-      initialDate: _tglLahir ?? DateTime.now(),
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-    if (_picked != null) {
-      setState(() {
-        _tglLahir = _picked;
-        _tglLahirController.text =
-            "${_picked.year}-${_picked.month}-${_picked.day}";
-      });
-    }
-  }
-
   void goAddUser() async {
     try {
       print('_nomorIndukController.text: ${_nomorIndukController.text}');
@@ -71,124 +55,142 @@ class _AddUserState extends State<AddUser> {
       );
       print(_response.data);
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Anggota berhasil ditambahkan!"),
-              actions: <Widget>[
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            );
-          });
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Anggota berhasil ditambahkan!"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pop(context); // Tutup dialog
+                  Navigator.pop(context); // Kembali ke halaman sebelumnya
+                },
+              ),
+            ],
+          );
+        },
+      );
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Oops!"),
-              content: Text(e.response?.data['message'] ?? 'An error occurred'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/anggota',
-                    );
-                  },
-                ),
-              ],
-            );
-          });
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Oops!"),
+            content: Text(e.response?.data['message'] ?? 'An error occurred'),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/anggota',
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+      context: context,
+      initialDate: _tglLahir ?? DateTime.now(),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+    if (_picked != null) {
+      setState(() {
+        _tglLahir = _picked;
+        _tglLahirController.text =
+            "${_picked.year}-${_picked.month}-${_picked.day}";
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
       appBar: AppBar(
-        title: Text('Tambah Anggota',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Color.fromARGB(255, 0, 0, 0),
-                )),
+        title: Text('Tambah Anggota'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView(children: [
-          const SizedBox(height: 10),
-          Form(
-              key: _formKey,
-              child: Column(
+        child: Container(
+          child: ListView(
+            children: [
+              Form(
+                key: _formKey,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
                       controller: _nomorIndukController,
-                      validator: (_nomorIndukController) {
-                        if (_nomorIndukController == null ||
-                            _nomorIndukController.isEmpty) {
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'Masukkan nomor induk.';
                         }
                         return null;
                       },
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Nomor Induk',
                         hintText: 'Masukkan nomor induk',
-                        prefixIcon: Icon(Icons.perm_identity,
-                            color: Color.fromARGB(255, 0, 0, 0)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.numbers),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _namaController,
-                      validator: (_namaController) {
-                        if (_namaController == null ||
-                            _namaController.isEmpty) {
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'Masukkan nama.';
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Nama',
                         hintText: 'Masukkan nama',
-                        prefixIcon: Icon(
-                          Icons.face,
-                          color: Color.fromARGB(255, 0, 0, 0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                        prefixIcon: Icon(Icons.person),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _alamatController,
-                      validator: (_alamatController) {
-                        if (_alamatController == null ||
-                            _alamatController.isEmpty) {
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'Masukkan alamat.';
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Alamat',
                         hintText: 'Masukkan alamat',
-                        prefixIcon: Icon(
-                          Icons.house,
-                          color: Color.fromARGB(255, 12, 3, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                        prefixIcon: Icon(Icons.house),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _tglLahirController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Tanggal Lahir',
                         hintText: 'Masukkan tanggal lahir',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         prefixIcon: Icon(Icons.calendar_today),
                       ),
                       readOnly: true,
@@ -196,7 +198,7 @@ class _AddUserState extends State<AddUser> {
                         _selectDate();
                       },
                       validator: (value) {
-                        if (_tglLahir == null) {
+                        if (_tglLahirController.text.isEmpty) {
                           return 'Masukkan tanggal lahir';
                         }
                         return null;
@@ -205,21 +207,20 @@ class _AddUserState extends State<AddUser> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _noTeleponController,
-                      validator: (_noTeleponController) {
-                        if (_noTeleponController == null ||
-                            _noTeleponController.isEmpty) {
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'Masukkan nomor telepon.';
                         }
                         return null;
                       },
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Nomor Telepon',
                         hintText: 'Masukkan nomor telepon',
-                        prefixIcon: Icon(
-                          Icons.phone,
-                          color: Color.fromARGB(255, 0, 0, 0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                        prefixIcon: Icon(Icons.phone),
                       ),
                     ),
                     const SizedBox(height: 70),
@@ -227,30 +228,31 @@ class _AddUserState extends State<AddUser> {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState?.save();
-                                  goAddUser();
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 20, 18, 19),
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 10)),
-                              child: Text('Tambah Anggota',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 16,
-                                      color: Colors.white))),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                goAddUser();
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.pink[100]!),
+                              minimumSize: MaterialStateProperty.all(
+                                  const Size(200, 50)),
+                            ),
+                            child: const Text('Tambah Anggota',
+                                style: TextStyle(
+                                    fontSize: 16, fontFamily: 'Poppins')),
+                          ),
                         ),
                       ],
                     ),
-                  ]))
-        ]),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

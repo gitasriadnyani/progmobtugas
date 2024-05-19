@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:get_storage/get_storage.dart';
 
 class LoginPage extends StatelessWidget {
-  final _dio = Dio();
-  final _storage = GetStorage();
-  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+  final Function(BuildContext, String, String) loginFunction;
 
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage({required this.loginFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +39,7 @@ class LoginPage extends StatelessWidget {
                       labelText: 'Email',
                       prefixIcon: const Icon(Icons.email),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelStyle: const TextStyle(
                         fontFamily: 'Poppins',
@@ -57,7 +53,7 @@ class LoginPage extends StatelessWidget {
                       labelText: 'Password',
                       prefixIcon: const Icon(Icons.lock),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelStyle: const TextStyle(
                         fontFamily: 'Poppins',
@@ -65,68 +61,16 @@ class LoginPage extends StatelessWidget {
                     ),
                     obscureText: true,
                   ),
-                  const SizedBox(height: 20.0),
+                  const SizedBox(height: 30.0),
                   ElevatedButton(
-                    onPressed: () async {
-                      if (emailController.text.trim().isEmpty ||
-                          passwordController.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Peringatan'),
-                              content: const Text(
-                                  'Mohon isi semua data dengan benar'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        return;
-                      }
-
-                      try {
-                        final response = await _dio.post(
-                          '$_apiUrl/login',
-                          data: {
-                            'email': emailController.text.trim(),
-                            'password': passwordController.text.trim(),
-                          },
-                        );
-                        print(response.data);
-                        _storage.write('token', response.data['data']['token']);
-                        Navigator.pushReplacementNamed(context, '/user_data');
-                      } on DioError catch (e) {
-                        print('${e.response} - ${e.response?.statusCode}');
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Peringatan'),
-                              content: const Text('Login gagal. Coba lagi.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                    onPressed: () {
+                      loginFunction(context, emailController.text,
+                          passwordController.text);
                     },
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.pink[100]!),
-                      minimumSize: MaterialStateProperty.all(const Size(0, 50)),
+                      minimumSize: MaterialStateProperty.all(const Size(0, 60)),
                     ),
                     child: const Text(
                       'Login',
