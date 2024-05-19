@@ -180,114 +180,135 @@ class _EditUserState extends State<EditUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Anggota'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _nomorIndukController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Tolong masukkan nomor induk.';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Nomor Induk',
-                      hintText: 'Masukkan nomor induk',
-                      prefixIcon: Icon(Icons.perm_identity),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _namaController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Tolong masukkan nama.';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Nama',
-                      hintText: 'Masukkan nama',
-                      prefixIcon: Icon(Icons.face),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _alamatController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Tolong masukkan alamat.';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Alamat',
-                      hintText: 'Masukkan alamat',
-                      prefixIcon: Icon(Icons.house),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _tglLahirController,
-                    decoration: const InputDecoration(
-                      labelText: 'Tanggal Lahir',
-                      hintText: 'Masukkan tanggal lahir',
-                      prefixIcon: Icon(Icons.calendar_today),
-                    ),
-                    readOnly: true,
-                    onTap: () {
-                      _selectDate();
-                    },
-                    validator: (value) {
-                      if (_tglLahir == null) {
-                        return 'Tolong masukkan tanggal lahir';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _noTeleponController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Tolong masukkan nomor telepon.';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Nomor Telepon',
-                      hintText: 'Masukkan nomor telepon',
-                      prefixIcon: Icon(Icons.phone),
-                    ),
-                  ),
-                  const SizedBox(height: 70),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        goEditUser();
-                      }
-                    },
-                    child: Text('Edit Anggota'),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text('Edit Anggota'),
         ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            child: ListView(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _nomorIndukController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Tolong masukkan nomor induk.';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Nomor Induk',
+                          hintText: 'Masukkan nomor induk',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.perm_identity),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _namaController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Tolong masukkan nama.';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Nama',
+                          hintText: 'Masukkan nama',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.face),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _alamatController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Tolong masukkan alamat.';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Alamat',
+                          hintText: 'Masukkan alamat',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.house),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _tglLahirController,
+                        decoration: const InputDecoration(
+                          labelText: 'Tanggal Lahir',
+                          hintText: 'Masukkan tanggal lahir',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.calendar_today),
+                        ),
+                        readOnly: true,
+                        onTap: () {
+                          _selectDate();
+                        },
+                        validator: (value) {
+                          if (_tglLahir == null) {
+                            return 'Tolong masukkan tanggal lahir';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _noTeleponController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Tolong masukkan nomor telepon.';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Nomor Telepon',
+                          hintText: 'Masukkan nomor telepon',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.phone),
+                        ),
+                      ),
+                      const SizedBox(height: 70),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  goEditUser();
+                                }
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.pink[100]!),
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(200, 50)),
+                              ),
+                              child: const Text('Tambah Anggota',
+                                  style: TextStyle(
+                                      fontSize: 16, fontFamily: 'Poppins')),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
