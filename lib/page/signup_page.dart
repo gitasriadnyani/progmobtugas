@@ -16,7 +16,13 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
+        title: const Text(
+          'Sign Up',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.pink[100],
       ),
@@ -35,13 +41,14 @@ class SignUpPage extends StatelessWidget {
                   height: 200,
                   width: 200,
                 ),
+                const SizedBox(height: 20.0),
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Name',
                     prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     labelStyle: const TextStyle(
                       fontFamily: 'Poppins',
@@ -61,7 +68,7 @@ class SignUpPage extends StatelessWidget {
                     labelText: 'Email',
                     prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     labelStyle: const TextStyle(
                       fontFamily: 'Poppins',
@@ -82,7 +89,7 @@ class SignUpPage extends StatelessWidget {
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     labelStyle: const TextStyle(
                       fontFamily: 'Poppins',
@@ -117,9 +124,9 @@ class SignUpPage extends StatelessWidget {
                   child: const Text(
                     'Register',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Poppins',
-                    ),
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                        color: Colors.black),
                   ),
                 ),
                 Column(
@@ -142,10 +149,10 @@ class SignUpPage extends StatelessWidget {
                           child: const Text(
                             "Login",
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
-                            ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins',
+                                color: Colors.black),
                           ),
                         ),
                       ],
