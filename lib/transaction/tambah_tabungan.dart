@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 
 class AddTabungan extends StatefulWidget {
   const AddTabungan({super.key});
@@ -70,12 +68,15 @@ class _AddTabunganState extends State<AddTabungan> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Text("Tabungan berhasil ditambahkan!",
-                      style: TextStyle(fontFamily: 'Poppins')),
+                  backgroundColor: Colors.white,
+                  title: const Text(
+                    "Yeayyy Berhasil!",
+                  ),
                   actions: <Widget>[
                     TextButton(
                       child: const Text("OK",
-                          style: TextStyle(fontFamily: 'Poppins')),
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 240, 98, 146))),
                       onPressed: () {
                         Navigator.of(context).pop();
                         Navigator.pushNamedAndRemoveUntil(
@@ -90,6 +91,7 @@ class _AddTabunganState extends State<AddTabungan> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  backgroundColor: Colors.white,
                   title: Text(responseData['message'],
                       style: const TextStyle(fontFamily: 'Poppins')),
                   content: const Text('Wait...',
@@ -97,7 +99,8 @@ class _AddTabunganState extends State<AddTabungan> {
                   actions: <Widget>[
                     TextButton(
                       child: const Text("OK",
-                          style: TextStyle(fontFamily: 'Poppins')),
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 240, 98, 146))),
                       onPressed: () {
                         Navigator.of(context).pop();
                         Navigator.pushNamedAndRemoveUntil(
@@ -115,14 +118,16 @@ class _AddTabunganState extends State<AddTabungan> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title:
-                  const Text("Oops!", style: TextStyle(fontFamily: 'Poppins')),
-              content: Text(e.response?.data['message'] ?? 'An error occurred',
-                  style: const TextStyle(fontFamily: 'Poppins')),
+              backgroundColor: Colors.white,
+              title: const Text("Oops!"),
+              content: Text(
+                e.response?.data['message'] ?? 'An error occurred',
+              ),
               actions: <Widget>[
                 TextButton(
-                  child:
-                      const Text("OK", style: TextStyle(fontFamily: 'Poppins')),
+                  child: const Text("OK",
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 240, 98, 146))),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -208,14 +213,10 @@ class _AddTabunganState extends State<AddTabungan> {
                     TextFormField(
                       controller: _transactionNominalController,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        CurrencyFormatter(),
-                      ],
                       decoration: const InputDecoration(
                         labelText: 'Nominal Transaksi',
                         labelStyle: TextStyle(fontFamily: 'Poppins'),
-                        // prefixIcon: Icon(Icons.attach_money),
+                        prefixIcon: Icon(Icons.attach_money),
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -265,31 +266,5 @@ class _AddTabunganState extends State<AddTabungan> {
             ],
           ),
         ));
-  }
-}
-
-class CurrencyFormatter extends TextInputFormatter {
-  final NumberFormat _numberFormat =
-      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
-
-    final num? parsed = int.tryParse(newValue.text);
-    if (parsed == null) {
-      return oldValue;
-    }
-
-    final String newString = _numberFormat
-        .format(parsed)
-        .substring(0, _numberFormat.format(parsed).length - 3);
-    return TextEditingValue(
-      text: newString,
-      selection: TextSelection.collapsed(offset: newString.length),
-    );
   }
 }

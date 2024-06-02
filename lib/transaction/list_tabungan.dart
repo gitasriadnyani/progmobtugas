@@ -220,14 +220,22 @@ class _TransaksiAnggotaState extends State<TabunganAnggota> {
                 itemBuilder: (context, index) {
                   final anggota = anggotaDatas!.anggotaDatas[index];
                   return ListTile(
-                    title: Text(
-                      anggota.nama,
-                      style: TextStyle(fontFamily: 'Poppins'),
+                    title: Row(
+                      children: [
+                        Text(
+                          '${anggota.nomor_induk}.',
+                          style: TextStyle(fontFamily: 'Poppins'),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          anggota.nama,
+                          style: TextStyle(fontFamily: 'Poppins'),
+                        ),
+                      ],
                     ),
                     subtitle: Row(
                       children: [
                         // const Icon(Icons.attach_money, size: 14),
-                        SizedBox(width: 6),
                         Text(
                           NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.')
                               .format(anggota.saldo),

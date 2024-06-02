@@ -192,8 +192,19 @@ class _ListUserState extends State<ListUser> {
                         final anggota =
                             filteredAnggotaDatas!.anggotaDatas[index];
                         return ListTile(
-                          title: Text(anggota.nama,
-                              style: TextStyle(fontFamily: 'Poppins')),
+                          title: Row(
+                            children: [
+                              Text(
+                                '${anggota.nomorInduk}.',
+                                style: TextStyle(fontFamily: 'Poppins'),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                anggota.nama,
+                                style: TextStyle(fontFamily: 'Poppins'),
+                              ),
+                            ],
+                          ),
                           subtitle: Row(
                             children: [
                               Icon(Icons.phone, size: 14),
