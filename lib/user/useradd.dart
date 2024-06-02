@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+class TambahUser extends StatefulWidget {
+  const TambahUser({super.key});
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<TambahUser> createState() => _TambahUserState();
 }
 
-class _AddUserState extends State<AddUser> {
+class _TambahUserState extends State<TambahUser> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nomorIndukController = TextEditingController();
   TextEditingController _namaController = TextEditingController();
@@ -57,17 +57,29 @@ class _AddUserState extends State<AddUser> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Anggota berhasil ditambahkan!"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.pop(context); // Tutup dialog
-                  Navigator.pop(context); // Kembali ke halaman sebelumnya
-                },
+          return Theme(
+            data: Theme.of(context).copyWith(
+              dialogBackgroundColor: Colors.white,
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.pink[300],
+                ),
               ),
-            ],
+            ),
+            child: AlertDialog(
+              title: Text("Anggota berhasil ditambahkannn!",
+                  style: TextStyle(color: Colors.black)),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/anggota', (route) => false);
+                  },
+                ),
+              ],
+            ),
           );
         },
       );
@@ -102,6 +114,17 @@ class _AddUserState extends State<AddUser> {
       initialDate: _tglLahir ?? DateTime.now(),
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.pink[200]!,
+              onPrimary: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (_picked != null) {
       setState(() {
@@ -116,7 +139,25 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Anggota'),
+        title: Row(
+          children: [
+            SizedBox(width: 8),
+            Text(
+              'Tambah Anggota',
+              style: TextStyle(fontFamily: 'Poppins'),
+            ),
+          ],
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/anggota', (route) => false);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 32,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -223,7 +264,7 @@ class _AddUserState extends State<AddUser> {
                         prefixIcon: Icon(Icons.phone),
                       ),
                     ),
-                    const SizedBox(height: 70),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
@@ -237,12 +278,23 @@ class _AddUserState extends State<AddUser> {
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.pink[100]!),
-                              minimumSize: MaterialStateProperty.all(
+                              minimumSize: MaterialStateProperty.all<Size>(
                                   const Size(200, 50)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
-                            child: const Text('Tambah Anggota',
-                                style: TextStyle(
-                                    fontSize: 16, fontFamily: 'Poppins')),
+                            child: const Text(
+                              'Tambah Anggota',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Poppins',
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
                         ),
                       ],

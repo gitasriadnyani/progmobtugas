@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:cobaapi/transaction/detail_tabungan.dart';
+import 'package:cobaapi/transaction/list_tabungan.dart';
+import 'package:cobaapi/transaction/tambah_tabungan.dart';
+import 'package:cobaapi/user/userdetails.dart';
+import 'package:cobaapi/user/useredit.dart';
+import 'package:cobaapi/user/useradd.dart';
+import 'package:cobaapi/user/userlist.dart';
 import 'package:cobaapi/page/login_page.dart';
-import 'package:cobaapi/page/userlist.dart';
-import 'package:cobaapi/page/homepage.dart';
 import 'package:cobaapi/page/profile_page.dart';
+import 'package:cobaapi/page/homepage.dart';
 import 'package:cobaapi/page/signup_page.dart';
-import 'package:cobaapi/page/useradd.dart';
 
 void main() async {
   await GetStorage.init();
@@ -27,76 +32,23 @@ class MainApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginPage(loginFunction: _performLogin),
-        '/user_data': (context) =>
-            UserDataPage(getUserFunction: _getUser, logoutFunction: _logout),
+        '/homepage': (context) => Homepage(logoutFunction: _logout),
         '/signup': (context) => SignUpPage(registerFunction: _goRegis),
-        '/profile': (context) => ProfilePage(getUserFunction: _getUser),
-        '/user_list': (context) => UsersList(
-              getAnggotaFunction: getAnggota,
-              delAnggotaFunction: delAnggota,
-            ),
-        '/add_user': (context) => AddUser()
+        '/profile': (context) => const ProfilePage(),
+        '/anggota': (context) => ListUser(logoutFunction: _logout),
+        '/add_anggota': (context) => const TambahUser(),
+        '/detail_anggota': (context) => const DetailsUser(),
+        '/edit_anggota': (context) => const EditUser(),
+        '/tabungan': (context) => const TabunganAnggota(),
+        '/detail_tabungan': (context) => const DetailsTabungan(),
+        '/add_tabungan': (context) => const AddTabungan(),
       },
     );
-  }
-
-  //mengambil data anggota
-  Future<AnggotaDatas?> getAnggota(BuildContext context) async {
-    try {
-      final _response = await _dio.get(
-        '$_apiUrl/anggota',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      Map<String, dynamic> responseData = _response.data;
-      print(responseData);
-      return AnggotaDatas.fromJson(responseData);
-    } on DioError catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-      return null;
-    }
-  }
-
-  //menghapus anggota (satu doang)
-  Future<void> delAnggota(BuildContext context, int id) async {
-    try {
-      final _response = await _dio.delete(
-        '$_apiUrl/anggota/$id',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Text('Anggota sudah dihapus.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      Navigator.pushReplacementNamed(context, '/user_list');
-    } on DioError catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
   }
 
   //loginssss
   Future<void> _performLogin(
       BuildContext context, String email, String password) async {
-    if (email.trim().isEmpty || password.trim().isEmpty) {
-      _showDialog(context, 'Peringatan', 'Mohon isi semua data dengan benar');
-      return;
-    }
-
     try {
       final response = await _dio.post(
         '$_apiUrl/login',
@@ -107,7 +59,7 @@ class MainApp extends StatelessWidget {
       );
       print(response.data);
       _storage.write('token', response.data['data']['token']);
-      Navigator.pushReplacementNamed(context, '/user_data');
+      Navigator.pushReplacementNamed(context, '/homepage');
     } on DioError catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       _showDialog(context, 'Peringatan', 'Login gagal. Coba lagi.');
@@ -134,37 +86,65 @@ class MainApp extends StatelessWidget {
     }
   }
 
-  //ngambil data user (cuma masih belum jalan gatau gabisa bisa)
-  Future<void> _getUser(BuildContext context) async {
-    try {
-      final response = await _dio.get(
-        '$_apiUrl/user',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      print(response.data);
-      return response.data;
-    } on DioError catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
-  }
-
   //yeayy logout
   Future<void> _logout(BuildContext context) async {
-    try {
-      final response = await _dio.get(
-        '$_apiUrl/logout',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      print(response.data);
+    bool confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.pink[300],
+              ),
+            ),
+            dialogBackgroundColor: Colors.white,
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                color: Colors.black,
+              ),
+              bodyLarge: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
+          child: AlertDialog(
+            title: Text('Konfirmasi Logout'),
+            content: Text('Apakah Anda yakin ingin logout?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Batal"),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text("Logout"),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
 
-      _storage.remove('token');
-      Navigator.pushReplacementNamed(context, '/login');
-    } on DioError catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
+    if (confirmed) {
+      try {
+        final response = await _dio.get(
+          '$_apiUrl/logout',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+          ),
+        );
+        print(response.data);
+
+        _storage.remove('token');
+        Navigator.pushReplacementNamed(context, '/login');
+      } on DioError catch (e) {
+        print('${e.response} - ${e.response?.statusCode}');
+      }
     }
   }
 
@@ -173,17 +153,27 @@ class MainApp extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            // Ubah warna tombol OK
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.pink[300], // Warna teks tombol OK
+              ),
             ),
-          ],
+          ),
+          child: AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         );
       },
     );
