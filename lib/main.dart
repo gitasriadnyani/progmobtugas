@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:cobaapi/transaction/detail_tabungan.dart';
 import 'package:cobaapi/transaction/list_tabungan.dart';
 import 'package:cobaapi/transaction/tambah_tabungan.dart';
+import 'package:cobaapi/transaction/bunga.dart';
 
 import 'package:cobaapi/user/userdetails.dart';
 import 'package:cobaapi/user/useredit.dart';
@@ -45,6 +46,7 @@ class MainApp extends StatelessWidget {
         '/tabungan': (context) => const TabunganAnggota(),
         '/detail_tabungan': (context) => const DetailsTabungan(),
         '/add_tabungan': (context) => const AddTabungan(),
+        '/bunga': (context) => const AddBunga(),
       },
     );
   }
@@ -86,6 +88,7 @@ class MainApp extends StatelessWidget {
       Navigator.pushReplacementNamed(context, '/login');
     } on DioError catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
+      _showDialog(context, 'Peringatan', 'Regis gagal. Coba lagi.');
     }
   }
 

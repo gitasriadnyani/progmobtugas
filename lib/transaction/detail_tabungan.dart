@@ -44,7 +44,7 @@ class _DetailsTabunganState extends State<DetailsTabungan> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text(
-                "Oops!",
+                "Ups!",
                 style: TextStyle(fontFamily: 'Poppins'),
               ),
               content: Text(
@@ -136,10 +136,6 @@ class _DetailsTabunganState extends State<DetailsTabungan> {
         ),
         actions: [
           Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromARGB(26, 94, 86, 149),
-            ),
             child: IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/add_tabungan', arguments: id);
@@ -152,12 +148,12 @@ class _DetailsTabunganState extends State<DetailsTabungan> {
             ),
           ),
           const SizedBox(width: 16),
-          Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromARGB(26, 94, 86, 149),
-            ),
-          ),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     shape: BoxShape.circle,
+          //     color: Color.fromARGB(26, 94, 86, 149),
+          //   ),
+          // ),
         ],
       ),
       body: Center(

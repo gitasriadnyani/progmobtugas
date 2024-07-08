@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final Function(BuildContext, String, String) loginFunction;
 
   LoginPage({required this.loginFunction});
 
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -59,7 +64,7 @@ class LoginPage extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        if (!value.contains('@') || !value.contains('.')) {
                           return 'Please enter a valid email address';
                         }
                         return null;
@@ -71,6 +76,18 @@ class LoginPage extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -78,7 +95,7 @@ class LoginPage extends StatelessWidget {
                           fontFamily: 'Poppins',
                         ),
                       ),
-                      obscureText: true,
+                      obscureText: _obscureText,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
@@ -93,7 +110,7 @@ class LoginPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          loginFunction(context, emailController.text,
+                          widget.loginFunction(context, emailController.text,
                               passwordController.text);
                         }
                       },

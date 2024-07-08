@@ -94,7 +94,7 @@ class _EditUserState extends State<EditUser> {
               ),
             ),
             child: AlertDialog(
-              title: Text("Anggota berhasil dieditt :)",
+              title: const Text("Anggota berhasil dieditt :)",
                   style: TextStyle(color: Colors.black)),
               actions: <Widget>[
                 TextButton(
@@ -203,6 +203,9 @@ class _EditUserState extends State<EditUser> {
                         if (_nomorIndukController == null ||
                             _nomorIndukController.isEmpty) {
                           return 'Masukkan nomor induk.';
+                        }
+                        if (int.tryParse(_nomorIndukController) == null) {
+                          return 'Nomor Induk harus berupa angka';
                         }
                         return null;
                       },

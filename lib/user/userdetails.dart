@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 class DetailsUser extends StatefulWidget {
   const DetailsUser({super.key});
@@ -15,6 +16,8 @@ class _DetailsUserState extends State<DetailsUser> {
   final _dio = Dio();
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  bool isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -39,14 +42,27 @@ class _DetailsUserState extends State<DetailsUser> {
       setState(() {
         anggota = Anggota.fromJson(responseData);
       });
+      await getSaldoAnggota();
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> getSaldoAnggota() async {
+    try {
+      final _response = await _dio.get(
+        '$_apiUrl/saldo/$id',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      Map<String, dynamic> responseData = _response.data;
+      setState(() {
+        anggota?.saldo = responseData['data']['saldo'];
+      });
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
   }
 
   @override
@@ -78,7 +94,7 @@ class _DetailsUserState extends State<DetailsUser> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: anggota == null
-              ? const Text("Belum ada anggota")
+              ? const CircularProgressIndicator()
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -89,28 +105,31 @@ class _DetailsUserState extends State<DetailsUser> {
                     _buildBorderedText(
                         "Tanggal Lahir", "${anggota?.tgl_lahir}"),
                     _buildBorderedText("Telepon", "${anggota?.telepon}"),
+                    _buildBorderedText("Total Saldo",
+                        "Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '').format(anggota?.saldo ?? 0)}"),
                     const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/edit_anggota',
-                                    arguments: anggota?.id);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.pink[100],
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 20)),
-                              child: const Text('Edit Anggota',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'Poppins',
-                                      color: Colors.black))),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/edit_anggota',
+                                  arguments: anggota?.id);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink[100],
+                              elevation: 1,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                            ),
+                            child: const Text('Edit Anggota',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black)),
+                          ),
                         ),
                       ],
                     ),
@@ -153,6 +172,7 @@ class Anggota {
   final String tgl_lahir;
   final String telepon;
   final int? status_aktif;
+  int saldo;
 
   Anggota({
     required this.id,
@@ -161,6 +181,7 @@ class Anggota {
     required this.alamat,
     required this.tgl_lahir,
     required this.telepon,
+    required this.saldo,
     this.status_aktif,
   });
 
@@ -179,6 +200,7 @@ class Anggota {
           tgl_lahir: anggotaData['tgl_lahir'],
           telepon: anggotaData['telepon'],
           status_aktif: anggotaData['status_aktif'],
+          saldo: 0,
         );
       }
     }

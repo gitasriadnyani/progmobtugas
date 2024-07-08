@@ -71,13 +71,13 @@ class Homepage extends StatelessWidget {
                         const SizedBox(height: 10.0),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/transaction');
+                            Navigator.pushNamed(context, '/tabungan');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 Colors.pink[100], // Background color
                           ),
-                          child: const Text(' Transaksi',
+                          child: const Text('Tabungan',
                               style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 16,
@@ -107,13 +107,13 @@ class Homepage extends StatelessWidget {
                         const SizedBox(height: 10.0),
                         ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/tabungan');
+                              Navigator.pushNamed(context, '/bunga');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Colors.pink[100], // Background color
                             ),
-                            child: const Text(' Tabungan',
+                            child: const Text('Bunga',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 16,

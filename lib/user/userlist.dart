@@ -55,7 +55,10 @@ class _ListUserState extends State<ListUser> {
         anggotaDatas: anggotaDatas!.anggotaDatas.where((anggota) {
           final nameLower = anggota.nama.toLowerCase();
           final phoneLower = anggota.telepon.toLowerCase();
-          return nameLower.contains(query) || phoneLower.contains(query);
+          final nomorIndukLower = anggota.nomorInduk.toString().toLowerCase();
+          return nameLower.contains(query) ||
+              phoneLower.contains(query) ||
+              nomorIndukLower.contains(query);
         }).toList(),
       );
     });

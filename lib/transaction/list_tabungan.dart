@@ -222,11 +222,11 @@ class _TransaksiAnggotaState extends State<TabunganAnggota> {
                   return ListTile(
                     title: Row(
                       children: [
-                        Text(
-                          '${anggota.nomor_induk}.',
-                          style: TextStyle(fontFamily: 'Poppins'),
-                        ),
-                        SizedBox(width: 8),
+                        // Text(
+                        //   '${anggota.nomor_induk}.',
+                        //   style: TextStyle(fontFamily: 'Poppins'),
+                        // ),
+                        // SizedBox(width: 8),
                         Text(
                           anggota.nama,
                           style: TextStyle(fontFamily: 'Poppins'),

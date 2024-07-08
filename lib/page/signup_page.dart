@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   final void Function(
           BuildContext context, String name, String email, String password)
       registerFunction;
 
   SignUpPage({required this.registerFunction, Key? key}) : super(key: key);
 
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,7 @@ class SignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const SizedBox(),
+                const SizedBox(height: 20.0),
                 Image.asset(
                   'image/profile.png',
                   height: 200,
@@ -84,10 +90,20 @@ class SignUpPage extends StatelessWidget {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -99,6 +115,9 @@ class SignUpPage extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
                     }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters long';
+                    }
                     return null;
                   },
                 ),
@@ -106,7 +125,7 @@ class SignUpPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      registerFunction(
+                      widget.registerFunction(
                         context,
                         _nameController.text,
                         _emailController.text,
@@ -124,38 +143,36 @@ class SignUpPage extends StatelessWidget {
                   child: const Text(
                     'Register',
                     style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                        color: Colors.black),
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-                Column(
+                const SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Have an account?",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Poppins',
-                          ),
+                    const Text(
+                      "Have an account?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/login');
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/login');
-                          },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins',
-                                color: Colors.black),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

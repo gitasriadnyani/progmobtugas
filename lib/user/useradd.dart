@@ -24,7 +24,6 @@ class _TambahUserState extends State<TambahUser> {
 
   @override
   void dispose() {
-    // Dispose the controller when the widget is disposed
     _nomorIndukController.dispose();
     _namaController.dispose();
     _alamatController.dispose();
@@ -53,6 +52,34 @@ class _TambahUserState extends State<TambahUser> {
           },
         ),
       );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Yakni tambah data?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Tidak"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.pink[300],
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text("Ya"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.pink[300],
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
       print(_response.data);
       showDialog(
         context: context,
@@ -67,7 +94,7 @@ class _TambahUserState extends State<TambahUser> {
               ),
             ),
             child: AlertDialog(
-              title: Text("Anggota berhasil ditambahkannn!",
+              title: const Text("Anggota berhasil ditambahkannn!",
                   style: TextStyle(color: Colors.black)),
               actions: <Widget>[
                 TextButton(
@@ -90,18 +117,25 @@ class _TambahUserState extends State<TambahUser> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Oops!"),
-            content: Text(e.response?.data['message'] ?? 'An error occurred'),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/anggota',
-                  );
-                },
-              ),
-            ],
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(e.response?.data['message'] ?? 'An error occurred'),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      child: const Text("Oke"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       );
@@ -139,7 +173,7 @@ class _TambahUserState extends State<TambahUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           children: [
             SizedBox(width: 8),
             Text(
@@ -174,6 +208,9 @@ class _TambahUserState extends State<TambahUser> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Masukkan nomor induk.';
+                        }
+                        if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                          return 'Masukkan nomor induk yang valid.';
                         }
                         return null;
                       },
